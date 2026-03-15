@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arushi — data person</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Bitter:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+
+/* ---------- RESET ---------- */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+/* ---------- TOKENS ---------- */
+:root {
+  --bg:     #111214;
+  --bg2:    #16181c;
+  --paper:  #1a1c21;
+  --text:   #e8e3d8;
+  --muted:  #7a7670;
+  --faint:  rgba(255,255,255,0.06);
+
+  --coral:    #ff6b6b;
+  --amber:    #f5a623;
+  --mint:     #5ee7b0;
+  --lavender: #b8a9f5;
+  --sky:      #5bc4f5;
+  --rose:     #f595b0;
+}
+
+/* ---------- BASE ---------- */
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Bitter', Georgia, serif;
+  line-height: 1.7;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* notebook grid overlay */
+body::after {
+  content: '';
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image:
+    repeating-linear-gradient(transparent, transparent 27px, rgba(255,255,255,.025) 27px, rgba(255,255,255,.025) 28px);
+  background-size: 100% 28px;
+}
+
+/* ---------- SCROLLBAR ---------- */
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: rgba(245,166,35,.3); }
+
+/* ---------- CURSOR ---------- */
+#cur {
+  position: fixed; z-index: 9999; pointer-events: none;
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--amber);
+  box-shadow: 0 0 8px var(--amber);
+  transform: translate(-50%,-50%);
+  transition: width .15s, height .15s;
+}
+#cur-ring {
+  position: fixed; z-index: 9998; pointer-events: none;
+  width: 26px; height: 26px; border-radius: 50%;
+  border: 1.5px solid rgba(245,166,35,.4);
+  transform: translate(-50%,-50%);
+}
+
+/* ---------- NAV ---------- */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 56px;
+  background: rgba(17,18,20,.92);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--faint);
+}
+.logo {
+  font-family: 'Caveat', cursive;
+  font-size: 1.35rem; font-weight: 700;
+  color: var(--amber); text-decoration: none;
+}
+.logo em { color: var(--muted); font-style: normal; font-size: 1rem; }
+.nav-links { display: flex; gap: 24px; list-style: none; }
+.nav-links a {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .62rem; letter-spacing: .14em; text-transform: uppercase;
+  text-decoration: none; color: var(--muted);
+  transition: color .2s;
+}
+.nav-links a:hover, .nav-links a.active { color: var(--amber); }
+
+/* ---------- LAYOUT ---------- */
+.wrap { max-width: 1060px; margin: 0 auto; padding: 0 56px; position: relative; z-index: 1; }
+section { padding: 88px 0; }
+
+.eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .6rem; letter-spacing: .28em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 6px;
+}
+.sec-title {
+  font-family: 'Caveat', cursive;
+  font-size: clamp(2rem, 3.8vw, 3rem);
+  font-weight: 700; line-height: 1.05; margin-bottom: 40px;
+}
+
+/* ---------- FADE IN ---------- */
+.fade { opacity: 0; transform: translateY(16px); transition: opacity .5s ease, transform .5s ease; }
+.fade.in { opacity: 1; transform: translateY(0); }
+
+/* ---------- HERO ---------- */
+#hero {
+  min-height: 100vh; display: flex; align-items: center;
+  padding-top: 76px; position: relative; overflow: hidden;
+}
+/* red margin line */
+#hero::before {
+  content: ''; position: absolute;
+  left: 172px; top: 0; bottom: 0; width: 1px;
+  background: rgba(255,107,107,.12); pointer-events: none;
+}
+.orb {
+  position: absolute; top: 8%; right: -4%;
+  width: 520px; height: 520px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(123,97,255,.12) 0%, rgba(245,166,35,.04) 45%, transparent 70%);
+  filter: blur(54px); pointer-events: none;
+  animation: orbpulse 8s ease-in-out infinite;
+}
+@keyframes orbpulse { 0%,100% { transform: scale(1); opacity: .7; } 50% { transform: scale(1.07) translate(12px,-16px); opacity: 1; } }
+@keyframes fadeup { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes blink { 50% { opacity: 0; } }
+
+.hero-chip {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .62rem; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--mint); margin-bottom: 18px;
+  display: flex; align-items: center; gap: 10px;
+  animation: fadeup .6s both;
+}
+.hero-chip::before { content: ''; display: block; width: 26px; height: 1px; background: var(--mint); }
+
+h1.hero-name {
+  font-family: 'Caveat', cursive;
+  font-size: clamp(3.5rem, 7.5vw, 6.8rem);
+  font-weight: 700; line-height: .92;
+  animation: fadeup .6s .07s both;
+}
+h1.hero-name .u { text-decoration: underline; text-decoration-color: var(--amber); text-underline-offset: 5px; }
+h1.hero-name .role { display: block; font-size: clamp(1.4rem, 3vw, 2.4rem); color: var(--muted); font-weight: 400; margin-top: 8px; }
+h1.hero-name .role .hi { color: var(--coral); }
+
+.hero-blurb {
+  max-width: 500px; margin-top: 26px;
+  font-size: 1rem; color: #9a9288; line-height: 1.82;
+  animation: fadeup .6s .14s both;
+}
+.hero-blurb strong { color: var(--text); font-weight: 600; }
+.hero-blurb .aside { display: block; margin-top: 8px; font-style: italic; font-size: .87rem; color: var(--muted); }
+
+.hero-btns { display: flex; gap: 13px; flex-wrap: wrap; margin-top: 34px; animation: fadeup .6s .21s both; }
+
+.btn-p {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .67rem; letter-spacing: .1em; text-transform: uppercase; font-weight: 700;
+  padding: 13px 28px; text-decoration: none; display: inline-block;
+  background: var(--amber); color: #111214;
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+  transition: transform .2s, box-shadow .2s;
+}
+.btn-p:hover { transform: translateY(-2px); box-shadow: 0 0 22px rgba(245,166,35,.4); }
+
+.btn-s {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .67rem; letter-spacing: .1em; text-transform: uppercase; font-weight: 700;
+  padding: 13px 28px; text-decoration: none; display: inline-block;
+  color: var(--mint); border: 1px solid rgba(94,231,176,.28);
+  transition: background .2s, border-color .2s;
+}
+.btn-s:hover { background: rgba(94,231,176,.07); border-color: var(--mint); }
+
+.hero-stats { display: flex; gap: 34px; margin-top: 52px; flex-wrap: wrap; animation: fadeup .6s .28s both; }
+.hstat { border-left: 2px solid var(--faint); padding-left: 14px; }
+.hstat-n { font-family: 'Caveat', cursive; font-size: 1.9rem; font-weight: 700; }
+.hstat-l { font-family: 'JetBrains Mono', monospace; font-size: .56rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-top: 1px; }
+
+/* fun-fact sticky note */
+#ff {
+  position: absolute; right: 4%; top: 20%; width: 210px;
+  background: #221e10; border: 1px solid rgba(245,166,35,.2);
+  padding: 16px 16px 12px;
+  transform: rotate(2.4deg);
+  box-shadow: 3px 5px 20px rgba(0,0,0,.45);
+  animation: fadeup .6s .5s both; z-index: 2;
+}
+#ff::before {
+  content: ''; position: absolute; top: -8px; left: 50%; transform: translateX(-50%);
+  width: 24px; height: 8px; background: rgba(245,166,35,.35);
+}
+.ff-lbl { font-family: 'JetBrains Mono', monospace; font-size: .5rem; letter-spacing: .18em; text-transform: uppercase; color: var(--amber); margin-bottom: 7px; }
+.ff-txt { font-family: 'Caveat', cursive; font-size: .98rem; color: #d4c9a8; line-height: 1.5; }
+.ff-src { font-family: 'JetBrains Mono', monospace; font-size: .48rem; color: var(--muted); margin-top: 6px; }
+.ff-btn { margin-top: 9px; font-family: 'JetBrains Mono', monospace; font-size: .5rem; letter-spacing: .1em; text-transform: uppercase; color: var(--amber); background: none; border: none; cursor: none; opacity: .65; transition: opacity .2s; display: block; }
+.ff-btn:hover { opacity: 1; }
+
+/* ---------- ABOUT ---------- */
+#about { background: var(--bg2); }
+.about-grid { display: grid; grid-template-columns: 1fr 300px; gap: 50px; align-items: start; }
+.about-p { font-size: .96rem; color: #9a9288; line-height: 1.84; margin-bottom: 15px; }
+.about-p strong { color: var(--text); font-weight: 600; }
+.about-p em { color: var(--amber); font-style: italic; }
+
+/* doodle slot — 320×180 px transparent PNG */
+.doodle {
+  margin-top: 22px; border: 1.5px dashed rgba(255,255,255,.1);
+  padding: 16px; text-align: center;
+}
+.doodle img { max-width: 100%; display: block; }
+.doodle-hint { font-family: 'Caveat', cursive; font-size: .88rem; color: var(--muted); line-height: 1.6; }
+.doodle-hint code { font-size: .7rem; color: var(--amber); }
+
+/* info card */
+.ic { background: var(--paper); border: 1px solid var(--faint); padding: 24px; }
+.ic-h { font-family: 'Caveat', cursive; font-size: 1.1rem; color: var(--amber); margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--faint); }
+.ir { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,.04); font-size: .84rem; }
+.ir:last-child { border-bottom: none; }
+.ik { font-family: 'JetBrains Mono', monospace; font-size: .57rem; color: var(--muted); letter-spacing: .08em; flex-shrink: 0; }
+.iv { color: var(--text); text-align: right; }
+.iv.ok { color: var(--mint); }
+
+/* doodle slot 2 — 240×200 px transparent PNG */
+.doodle2 { margin-top: 16px; border: 1.5px dashed rgba(255,255,255,.1); padding: 14px; text-align: center; }
+.doodle2 img { max-width: 100%; display: block; }
+.doodle2-hint { font-family: 'Caveat', cursive; font-size: .82rem; color: var(--muted); line-height: 1.55; }
+.doodle2-hint code { font-size: .68rem; color: var(--amber); }
+
+/* ---------- SKILLS ---------- */
+.sk-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.sk-card {
+  background: var(--paper); border: 1px solid var(--faint); padding: 20px;
+  position: relative; overflow: hidden;
+  transition: transform .22s, border-color .22s;
+}
+.sk-card:hover { transform: translateY(-3px); }
+.sk-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  transform: scaleX(0); transform-origin: left; transition: transform .3s;
+}
+.sk-card:hover::before { transform: scaleX(1); }
+.sk1::before { background: linear-gradient(90deg, var(--coral), var(--rose)); }
+.sk2::before { background: linear-gradient(90deg, var(--amber), var(--coral)); }
+.sk3::before { background: linear-gradient(90deg, var(--mint), var(--sky)); }
+.sk4::before { background: linear-gradient(90deg, var(--lavender), var(--sky)); }
+.sk1:hover { border-color: rgba(255,107,107,.22); }
+.sk2:hover { border-color: rgba(245,166,35,.22); }
+.sk3:hover { border-color: rgba(94,231,176,.22); }
+.sk4:hover { border-color: rgba(184,169,245,.22); }
+.sk-lbl { font-family: 'JetBrains Mono', monospace; font-size: .57rem; letter-spacing: .18em; text-transform: uppercase; margin-bottom: 13px; }
+.tags { display: flex; flex-wrap: wrap; gap: 5px; }
+.tag {
+  font-family: 'JetBrains Mono', monospace; font-size: .57rem;
+  padding: 4px 9px; background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08);
+  color: #c8c0b4; letter-spacing: .04em; transition: background .18s, color .18s;
+}
+.tag:hover { background: rgba(255,255,255,.08); color: var(--text); }
+
+/* ---------- PROJECTS ---------- */
+#projects { background: var(--bg2); }
+.proj-list { display: flex; flex-direction: column; }
+
+.proj-card {
+  background: var(--paper); border: 1px solid var(--faint);
+  border-bottom: none; padding: 28px 30px;
+  transition: border-color .22s;
+}
+.proj-card:last-of-type { border-bottom: 1px solid var(--faint); }
+.p1 { border-left: 3px solid var(--coral); }
+.p2 { border-left: 3px solid var(--amber); }
+.p3 { border-left: 3px solid var(--lavender); }
+.p1:hover { border-color: rgba(255,107,107,.28); border-left-color: var(--coral); }
+.p2:hover { border-color: rgba(245,166,35,.28); border-left-color: var(--amber); }
+.p3:hover { border-color: rgba(184,169,245,.28); border-left-color: var(--lavender); }
+
+.proj-top { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 4px; }
+.proj-num { font-family: 'JetBrains Mono', monospace; font-size: .57rem; letter-spacing: .2em; color: var(--muted); }
+.proj-date { font-family: 'JetBrains Mono', monospace; font-size: .57rem; color: var(--muted); }
+.proj-title { font-family: 'Caveat', cursive; font-size: 1.5rem; font-weight: 700; line-height: 1.2; margin-bottom: 12px; }
+.proj-buls { display: flex; flex-direction: column; gap: 7px; margin-bottom: 15px; }
+.pb { display: flex; gap: 9px; font-size: .88rem; color: #8a8278; line-height: 1.68; }
+.pb strong { color: var(--text); font-weight: 600; }
+.p1 .pb::before { content: '→'; color: var(--coral); flex-shrink: 0; font-size: .76rem; margin-top: 3px; }
+.p2 .pb::before { content: '→'; color: var(--amber); flex-shrink: 0; font-size: .76rem; margin-top: 3px; }
+.p3 .pb::before { content: '→'; color: var(--lavender); flex-shrink: 0; font-size: .76rem; margin-top: 3px; }
+.proj-stack { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 15px; }
+.st { font-family: 'JetBrains Mono', monospace; font-size: .56rem; padding: 3px 8px; border: 1px solid; letter-spacing: .04em; }
+.s1 { color: var(--coral); border-color: rgba(255,107,107,.2); background: rgba(255,107,107,.04); }
+.s2 { color: var(--amber); border-color: rgba(245,166,35,.2); background: rgba(245,166,35,.04); }
+.s3 { color: var(--lavender); border-color: rgba(184,169,245,.2); background: rgba(184,169,245,.04); }
+.proj-foot { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+.proj-links { display: flex; gap: 16px; }
+.plink { font-family: 'JetBrains Mono', monospace; font-size: .6rem; color: var(--muted); text-decoration: none; letter-spacing: .1em; text-transform: uppercase; transition: color .18s; display: flex; align-items: center; gap: 4px; }
+.plink::before { content: '↗'; }
+.plink:hover { color: var(--amber); }
+
+/* expand button */
+.expand-btn {
+  font-family: 'JetBrains Mono', monospace; font-size: .6rem; letter-spacing: .12em; text-transform: uppercase;
+  background: none; border: 1px solid rgba(255,255,255,.1); color: var(--muted);
+  padding: 6px 14px; cursor: none; display: flex; align-items: center; gap: 6px;
+  transition: border-color .2s, color .2s;
+}
+.expand-btn:hover { border-color: var(--amber); color: var(--amber); }
+.expand-btn.open { color: var(--amber); border-color: var(--amber); }
+.p2 .expand-btn.open { color: var(--amber); border-color: var(--amber); }
+.p3 .expand-btn.open { color: var(--lavender); border-color: var(--lavender); }
+.arr { display: inline-block; transition: transform .3s; }
+.expand-btn.open .arr { transform: rotate(180deg); }
+
+/* detail panel */
+.proj-detail {
+  max-height: 0; overflow: hidden;
+  transition: max-height .45s cubic-bezier(.4,0,.2,1), padding .3s ease;
+  background: rgba(0,0,0,.22);
+  padding: 0 30px;
+}
+.proj-detail.open { max-height: 1200px; padding: 24px 30px 26px; }
+.p1 .proj-detail { border-left: 3px solid var(--coral); }
+.p2 .proj-detail { border-left: 3px solid var(--amber); }
+.p3 .proj-detail { border-left: 3px solid var(--lavender); }
+.pd-h { font-family: 'Caveat', cursive; font-size: 1.1rem; font-weight: 700; margin-bottom: 14px; }
+.p1 .pd-h { color: var(--coral); }
+.p2 .pd-h { color: var(--amber); }
+.p3 .pd-h { color: var(--lavender); }
+.pd-sec { margin-bottom: 20px; }
+.pd-sec:last-child { margin-bottom: 0; }
+.pd-lbl { font-family: 'JetBrains Mono', monospace; font-size: .57rem; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); margin-bottom: 7px; }
+.pd-p { font-size: .9rem; color: #8a8278; line-height: 1.82; }
+.pd-p strong { color: var(--text); font-weight: 600; }
+.pd-p em { font-style: italic; color: var(--muted); }
+.pd-ul { display: flex; flex-direction: column; gap: 7px; margin-top: 6px; }
+.pd-li { display: flex; gap: 9px; font-size: .88rem; color: #8a8278; line-height: 1.65; }
+.pd-li::before { content: '◦'; color: var(--muted); flex-shrink: 0; margin-top: 2px; }
+.pd-li strong { color: var(--text); font-weight: 600; }
+
+/* ---------- CERTS + ACHIEVEMENTS ---------- */
+.ca-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; }
+.sub-h { font-family: 'Caveat', cursive; font-size: 1.25rem; font-weight: 700; margin-bottom: 16px; }
+.cert-list, .ach-list { display: flex; flex-direction: column; gap: 11px; }
+
+.cert-c {
+  background: var(--paper); border: 1px solid var(--faint); border-left: 3px solid var(--sky);
+  padding: 15px 17px; display: flex; flex-direction: column; gap: 4px;
+  transition: transform .2s, border-color .2s;
+}
+.cert-c:hover { transform: translateY(-2px); border-color: rgba(91,196,245,.28); }
+.cert-prov { font-family: 'JetBrains Mono', monospace; font-size: .57rem; color: var(--sky); letter-spacing: .12em; text-transform: uppercase; }
+.cert-nm { font-size: .9rem; font-weight: 600; }
+.cert-badge { align-self: flex-start; font-family: 'JetBrains Mono', monospace; font-size: .53rem; color: var(--mint); border: 1px solid rgba(94,231,176,.22); padding: 2px 7px; background: rgba(94,231,176,.05); }
+.cert-yr { font-family: 'JetBrains Mono', monospace; font-size: .55rem; color: var(--muted); }
+
+.ach-c {
+  background: var(--paper); border: 1px solid var(--faint); border-left: 3px solid var(--rose);
+  padding: 15px 17px; transition: transform .2s, border-color .2s;
+}
+.ach-c:hover { transform: translateY(-2px); border-color: rgba(245,149,176,.28); }
+.ach-tag { font-family: 'JetBrains Mono', monospace; font-size: .55rem; color: var(--rose); letter-spacing: .14em; text-transform: uppercase; margin-bottom: 4px; }
+.ach-t { font-size: .9rem; font-weight: 600; margin-bottom: 4px; }
+.ach-d { font-size: .83rem; color: var(--muted); line-height: 1.62; }
+.ach-badge { display: inline-block; margin-top: 9px; font-family: 'JetBrains Mono', monospace; font-size: .53rem; color: var(--rose); border: 1px solid rgba(245,149,176,.22); padding: 2px 8px; background: rgba(245,149,176,.05); }
+
+/* ---------- EXPERIENCE ---------- */
+#experience { background: var(--bg2); }
+.exp-box {
+  background: var(--paper); border: 1px solid var(--faint); border-left: 3px solid var(--amber);
+  padding: 32px 32px 28px; position: relative;
+}
+.exp-box::before {
+  content: '"'; position: absolute; top: 10px; right: 20px;
+  font-family: 'Bitter', serif; font-size: 5rem; line-height: 1;
+  color: rgba(245,166,35,.07); pointer-events: none;
+}
+.exp-h { font-family: 'Caveat', cursive; font-size: 1.35rem; font-weight: 700; color: var(--amber); margin-bottom: 9px; }
+.exp-b { font-size: .94rem; color: #8a8278; line-height: 1.82; max-width: 580px; }
+.exp-b strong { color: var(--text); font-weight: 600; }
+.exp-note { margin-top: 16px; font-family: 'Caveat', cursive; font-size: .96rem; color: var(--muted); font-style: italic; }
+
+/* ---------- COMPETITIVE ---------- */
+.cp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.cp-c {
+  background: var(--paper); border: 1px solid var(--faint); padding: 22px;
+  transition: transform .2s, border-color .2s;
+}
+.cp-c:hover { transform: translateY(-3px); }
+.cc1:hover { border-color: rgba(255,107,107,.24); }
+.cc2:hover { border-color: rgba(94,231,176,.24); }
+.cc3:hover { border-color: rgba(184,169,245,.24); }
+.cc4:hover { border-color: rgba(245,166,35,.24); }
+.cp-plat { font-family: 'JetBrains Mono', monospace; font-size: .56rem; letter-spacing: .18em; text-transform: uppercase; margin-bottom: 5px; }
+.cp-t { font-family: 'Caveat', cursive; font-size: 1.05rem; font-weight: 700; margin-bottom: 5px; }
+.cp-d { font-size: .83rem; color: var(--muted); line-height: 1.6; }
+.cp-badge { display: inline-block; margin-top: 9px; font-family: 'JetBrains Mono', monospace; font-size: .52rem; padding: 2px 8px; border: 1px solid; }
+
+/* ---------- PLACEHOLDERS (open source / blog / research) ---------- */
+.ph { background: var(--paper); border: 1px dashed rgba(255,255,255,.08); padding: 26px; text-align: center; margin-bottom: 12px; }
+.ph-t { font-family: 'Caveat', cursive; font-size: 1.15rem; font-weight: 700; margin-bottom: 7px; }
+.ph p { font-size: .88rem; color: var(--muted); line-height: 1.8; }
+.ph p strong { color: var(--text); }
+.ph a { color: var(--sky); text-decoration: none; border-bottom: 1px solid rgba(91,196,245,.25); }
+
+/* ---------- CONTACT ---------- */
+.ct-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 42px; align-items: start; }
+.ct-intro { font-size: .94rem; color: #8a8278; line-height: 1.82; margin-bottom: 22px; }
+.ct-intro strong { color: var(--text); font-weight: 600; }
+.ct-links { display: flex; flex-direction: column; gap: 9px; }
+.clink {
+  display: flex; align-items: center; gap: 12px; padding: 12px 15px;
+  text-decoration: none; color: var(--text); font-size: .86rem;
+  background: var(--paper); border: 1px solid var(--faint);
+  transition: border-color .2s, background .2s, color .2s;
+}
+.clink:hover { border-color: var(--amber); background: rgba(245,166,35,.04); color: var(--amber); }
+.cicon { font-size: .9rem; width: 20px; text-align: center; flex-shrink: 0; }
+.cmeta { font-family: 'JetBrains Mono', monospace; font-size: .53rem; color: var(--muted); letter-spacing: .1em; }
+.ct-form { background: var(--paper); border: 1px solid var(--faint); padding: 24px; }
+.fr { margin-bottom: 13px; }
+.fr label { display: block; font-family: 'JetBrains Mono', monospace; font-size: .55rem; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); margin-bottom: 5px; }
+.fr input, .fr textarea {
+  width: 100%; padding: 10px 12px;
+  background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.08);
+  color: var(--text); font-family: 'Bitter', serif; font-size: .88rem;
+  outline: none; transition: border-color .2s; resize: vertical;
+}
+.fr input:focus, .fr textarea:focus { border-color: rgba(245,166,35,.36); }
+.fr textarea { min-height: 100px; }
+.fbtn {
+  width: 100%; padding: 12px; font-family: 'JetBrains Mono', monospace;
+  font-size: .65rem; letter-spacing: .12em; text-transform: uppercase; font-weight: 700;
+  background: var(--amber); color: #111214; border: none; cursor: none;
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+  transition: transform .2s, box-shadow .2s;
+}
+.fbtn:hover { transform: translateY(-2px); box-shadow: 0 0 18px rgba(245,166,35,.34); }
+
+/* ---------- FOOTER ---------- */
+footer {
+  position: relative; z-index: 1; border-top: 1px solid var(--faint);
+  padding: 22px 56px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
+}
+.ft { font-family: 'JetBrains Mono', monospace; font-size: .56rem; color: var(--muted); letter-spacing: .1em; }
+.ft span { color: var(--amber); }
+.ft-egg { font-family: 'Caveat', cursive; font-size: .9rem; color: rgba(255,255,255,.1); transition: color .3s; }
+.ft-egg:hover { color: var(--rose); }
+
+/* ---------- EASTER EGG ---------- */
+#egg {
+  position: fixed; inset: 0; z-index: 10000;
+  background: rgba(8,8,10,.97);
+  display: none; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; padding: 40px;
+}
+#egg.show { display: flex; }
+#egg h2 { font-family: 'Caveat', cursive; font-size: 2.8rem; color: var(--amber); margin-bottom: 14px; }
+.egg-body { font-size: .97rem; color: #8a8278; line-height: 1.9; max-width: 520px; }
+.egg-body strong { color: var(--text); }
+.egg-note { margin-top: 14px; font-family: 'Caveat', cursive; font-size: .95rem; color: var(--muted); }
+.egg-close {
+  margin-top: 24px; font-family: 'JetBrains Mono', monospace; font-size: .62rem;
+  letter-spacing: .15em; text-transform: uppercase; color: var(--muted);
+  background: none; border: 1px solid rgba(255,255,255,.1); padding: 10px 22px;
+  cursor: none; transition: border-color .2s, color .2s;
+}
+.egg-close:hover { border-color: var(--amber); color: var(--amber); }
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 840px) {
+  nav { padding: 14px 20px; }
+  .nav-links { display: none; }
+  .wrap { padding: 0 20px; }
+  section { padding: 66px 0; }
+  .about-grid, .ca-grid, .ct-grid, .cp-grid, .sk-grid { grid-template-columns: 1fr; }
+  #ff, .orb { display: none; }
+  #hero::before { display: none; }
+  footer { padding: 18px 20px; flex-direction: column; text-align: center; }
+}
+
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="cur-ring"></div>
+
+<!-- EASTER EGG — write your own content here -->
+<div id="egg">
+  <h2>✦ This is a secret page ✦</h2>
+  <div class="egg-body">
+    <p>Theres nothing here tho.</p>
+  </div>
+  <div class="egg-note">// Konami code: ↑↑↓↓←→←→BA &nbsp;|&nbsp; or click ✦ in the footer</div>
+  <button class="egg-close" onclick="document.getElementById('egg').classList.remove('show')">← close</button>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a href="#hero" class="logo">Arushi<em> — data person</em></a>
+  <ul class="nav-links">
+    <li><a href="#about">about</a></li>
+    <li><a href="#skills">skills</a></li>
+    <li><a href="#projects">projects</a></li>
+    <li><a href="#certifications">certs</a></li>
+    <li><a href="#experience">exp</a></li>
+    <li><a href="#competitive">hackathons</a></li>
+    <li><a href="#contact">contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div id="hero">
+  <div class="orb"></div>
+
+  <!-- fun-fact sticky note
+  <div id="ff">
+    <div class="ff-lbl">⚡ random fact</div>
+    <div class="ff-txt" id="ff-body">loading...</div>
+    <div class="ff-src" id="ff-src"></div>
+    <button class="ff-btn" onclick="nextFact()">another one →</button>
+  </div> -->
+
+  <div class="wrap">
+    <div class="hero-chip">Introduction &amp; Summary</div>
+    <h1 class="hero-name">
+      <span class="u">Arushi</span>
+      <span class="role">data scientist &amp; <span class="hi">builder</span></span>
+    </h1>
+    <p class="hero-blurb">
+      I build things that turn messy data into something <strong>actually useful</strong> — pipelines, models, dashboards, the full stack. I've processed 500,000 space weather events, tracked 5,000 stock updates a minute, and figured out what makes YouTube videos go viral.
+      <span class="aside">// yes, space weather is a real field. yes, I went deep on it.</span>
+    </p>
+    <div class="hero-btns">
+      <a href="#projects" class="btn-p">see the work</a>
+      <a href="resume.pdf" download class="btn-s">↓ download resume</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hstat" style="border-left-color:var(--coral)">
+        <div class="hstat-n" style="color:var(--coral)">3</div>
+        <div class="hstat-l">projects</div>
+      </div>
+      <div class="hstat" style="border-left-color:var(--mint)">
+        <div class="hstat-n" style="color:var(--mint)">3</div>
+        <div class="hstat-l">certifications</div>
+      </div>
+      <div class="hstat" style="border-left-color:var(--amber)">
+        <div class="hstat-n" style="color:var(--amber)">top 15</div>
+        <div class="hstat-l">SIH hackathon</div>
+      </div>
+      <div class="hstat" style="border-left-color:var(--lavender)">
+        <div class="hstat-n" style="color:var(--lavender)">top 10%</div>
+        <div class="hstat-l">dean's list</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT ME -->
+<section id="about">
+  <div class="wrap">
+    <div class="eyebrow">About Me</div>
+    <h2 class="sec-title" style="color:var(--amber)">who's behind the data?</h2>
+    <div class="about-grid">
+      <div>
+        <p class="about-p fade">I'm a third-year <strong>B.Tech Data Science student</strong> at Lovely Professional University. I got into this field because data is one of the most genuinely interesting puzzles you can spend your time on — there's always a pattern hiding somewhere, and finding it is unreasonably satisfying.</p>
+        <p class="about-p fade">My work sits at the intersection of <strong>data engineering and machine learning</strong>. I like building the whole pipeline — raw ingestion, preprocessing, modelling, and the dashboard someone actually uses. I care about doing it properly: clean code, documented decisions, reproducible results.</p>
+        <p class="about-p fade">I'm someone who asks <em>why</em> before <em>how</em>. The thought-process panels on each project below exist for exactly that reason.</p>
+
+        <!-- DOODLE SLOT 1: 320×180px transparent PNG -->
+        <!-- <div class="doodle fade">
+          <img src="eyes.jpeg" alt="doodle"> 
+        </div>
+      </div> -->
+
+      <div>
+        <div class="ic fade">
+          <div class="ic-h">// quick.info</div>
+          <div class="ir"><span class="ik">degree</span><span class="iv">B.Tech Data Science</span></div>
+          <div class="ir"><span class="ik">university</span><span class="iv">Lovely Professional University</span></div>
+          <div class="ir"><span class="ik">CGPA</span><span class="iv">8.75 / 10</span></div>
+          <div class="ir"><span class="ik">graduation</span><span class="iv">August, 2027</span></div>
+          <div class="ir"><span class="ik">location</span><span class="iv">Phagwara, Punjab</span></div>
+          <div class="ir"><span class="ik">focus</span><span class="iv">ML &amp; Data Eng.</span></div>
+          <div class="ir"><span class="ik">status</span><span class="iv ok">open to work ✓</span></div>
+        </div>
+
+        <!-- DOODLE SLOT 2: 240×200px transparent PNG -->
+        <!-- <div class="doodle2 fade">
+          <div class="doodle2-hint">
+            🖊 [doodle 2 — 240 × 200 px]<br>
+            replace with: <code>&lt;img src="doodle2.png"&gt;</code>
+          </div>
+        </div> -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="wrap">
+    <div class="eyebrow">Skills &amp; Technologies</div>
+    <h2 class="sec-title" style="color:var(--mint)">what I actually know how to use</h2>
+    <div class="sk-grid">
+      <div class="sk-card sk1 fade">
+        <div class="sk-lbl" style="color:var(--coral)">// programming &amp; databases</div>
+        <div class="tags">
+          <span class="tag">Python</span><span class="tag">MySQL</span><span class="tag">PostgreSQL</span>
+        </div>
+      </div>
+      <div class="sk-card sk2 fade">
+        <div class="sk-lbl" style="color:var(--amber)">// analysis &amp; visualisation</div>
+        <div class="tags">
+          <span class="tag">NumPy</span><span class="tag">Pandas</span><span class="tag">Matplotlib</span>
+          <span class="tag">Seaborn</span><span class="tag">Plotly</span><span class="tag">Tableau</span>
+        </div>
+      </div>
+      <div class="sk-card sk3 fade">
+        <div class="sk-lbl" style="color:var(--mint)">// data science &amp; ML</div>
+        <div class="tags">
+          <span class="tag">Scikit-learn</span><span class="tag">Keras</span><span class="tag">Time Series</span>
+          <span class="tag">Classification</span><span class="tag">Feature Eng.</span><span class="tag">EDA</span>
+        </div>
+      </div>
+      <div class="sk-card sk4 fade">
+        <div class="sk-lbl" style="color:var(--lavender)">// data engineering</div>
+        <div class="tags">
+          <span class="tag">Apache Airflow</span><span class="tag">Astronomer</span><span class="tag">Docker</span>
+          <span class="tag">ETL Pipelines</span><span class="tag">REST APIs</span><span class="tag">Streamlit</span><span class="tag">Git</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="wrap">
+    <div class="eyebrow">Projects</div>
+    <h2 class="sec-title" style="color:var(--coral)">things I built</h2>
+    <div class="proj-list">
+
+      <!-- PROJECT 1 -->
+      <div class="proj-card p1 fade">
+        <div class="proj-top">
+          <div class="proj-num">01 — featured</div>
+          <div class="proj-date">Sep 2025 – Dec 2025</div>
+        </div>
+        <div class="proj-title">Real-Time Space Weather Analysis &amp; Prediction 🌌</div>
+        <div class="proj-buls">
+          <div class="pb">16 years of historical data (320 MB, 500K+ events) — time-series analysis revealing CMEs precede geomagnetic storms by 2–3 days with 70% correlation.</div>
+          <div class="pb">Automated ETL pipeline via Apache Airflow ingesting 500+ daily events from NASA/NOAA APIs with preprocessing &amp; quality checks.</div>
+          <div class="pb">Interactive Streamlit dashboard for real-time monitoring and historical pattern visualization.</div>
+        </div>
+        <div class="proj-stack">
+          <span class="st s1">Python</span><span class="st s1">MySQL</span><span class="st s1">Scikit-learn</span>
+          <span class="st s1">Apache Airflow</span><span class="st s1">Docker</span><span class="st s1">Streamlit</span><span class="st s1">Git</span>
+        </div>
+        <div class="proj-foot">
+          <div class="proj-links">
+            <a href="#" class="plink">GitHub</a>
+            <a href="#" class="plink">Live Demo</a>
+          </div>
+          <button class="expand-btn" onclick="toggleDetail(this)">thought process <span class="arr">↓</span></button>
+        </div>
+      </div>
+      <div class="proj-detail p1">
+        <div class="pd-h">// how I approached this</div>
+        <div class="pd-sec">
+          <div class="pd-lbl">the problem</div>
+          <p class="pd-p">Space weather events are well-documented individually but the <strong>relationships between them across time</strong> aren't easy to surface. I wanted to ingest real data continuously, store it properly, and find those patterns automatically rather than requiring a researcher to dig through CSVs.</p>
+        </div>
+        <div class="pd-sec">
+          <div class="pd-lbl">key decisions</div>
+          <div class="pd-ul">
+            <div class="pd-li"><strong>Why Airflow over a cron job?</strong> NASA/NOAA APIs have rate limits and occasional downtime. Airflow gave me retry logic, task dependency management, and pipeline visibility. A cron job would have silently failed.</div>
+            <div class="pd-li"><strong>Why MySQL over a time-series DB?</strong> At 500K events, MySQL with proper timestamp indexing was more than sufficient. I didn't want to add operational complexity without a real performance need.</div>
+            <div class="pd-li"><strong>The 70% correlation</strong> wasn't a hypothesis — I ran lag-correlation across event types and the 2–3 day signal kept appearing. That only shows up when you actually look at the data.</div>
+          </div>
+        </div>
+        <div class="pd-sec">
+          <div class="pd-lbl">what I'd do differently</div>
+          <p class="pd-p">Add a proper alerting layer and explore whether an LSTM on the lag features improves prediction beyond correlation analysis. <em>That's on the roadmap.</em></p>
+        </div>
+      </div>
+
+      <!-- PROJECT 2 -->
+      <div class="proj-card p2 fade">
+        <div class="proj-top">
+          <div class="proj-num">02</div>
+          <div class="proj-date">Jun 2025 – Jul 2025</div>
+        </div>
+        <div class="proj-title">Real-Time Stock Analytics Engine 📈</div>
+        <div class="proj-buls">
+          <div class="pb">\5,000+ stock updates per minute — optimized data structures achieving O(1) query performance.</div>
+          <div class="pb">Statistical analysis: rolling volatility, price trends, and cross-symbol correlations across 50+ stocks simultaneously.</div>
+          <div class="pb">Interactive dashboard with automated alerts — if you're checking manually, you've already missed the signal.</div>
+        </div>
+        <div class="proj-stack">
+          <span class="st s2">Python</span><span class="st s2">Pandas</span>
+          <span class="st s2">Apache Airflow</span><span class="st s2">Dash</span><span class="st s2">MySQL</span>
+        </div>
+        <div class="proj-foot">
+          <div class="proj-links">
+            <a href="#" class="plink">GitHub</a>
+            <a href="#" class="plink">Demo</a>
+          </div>
+          <button class="expand-btn" onclick="toggleDetail(this)">thought process <span class="arr">↓</span></button>
+        </div>
+      </div>
+      <div class="proj-detail p2">
+        <div class="pd-h">// how I approached this</div>
+        <div class="pd-sec">
+          <div class="pd-lbl">the problem</div>
+          <p class="pd-p">The hard part wasn't the statistics — rolling averages are well-understood. The challenge was making them <strong>work in real-time at volume</strong>. At 5,000 updates/min across 50 symbols, naive implementations fall apart. This was really an exercise in <strong>thinking about data structures first</strong>.</p>
+        </div>
+        <div class="pd-sec">
+          <div class="pd-lbl">key decisions</div>
+          <div class="pd-ul">
+            <div class="pd-li"><strong>O(1) via running aggregates</strong> — I maintain hash maps keyed by symbol and update running state on each tick rather than reprocessing history. When a new update arrives, it's a constant-time operation.</div>
+            <div class="pd-li"><strong>Dash over Streamlit here</strong> — this dashboard needed smooth real-time updates without full page refreshes. Dash's callback architecture handles live data better for this use case.</div>
+          </div>
+        </div>
+        <div class="pd-sec">
+          <div class="pd-lbl">what I'd do differently</div>
+          <p class="pd-p">Add a message queue (Kafka or Redis Pub/Sub) between ingestion and analytics. Right now they're tightly coupled — <em>decoupling them would make the system more resilient and easier to scale.</em></p>
+        </div>
+      </div>
+
+      <!-- PROJECT 3 -->
+      <div class="proj-card p3 fade">
+        <div class="proj-top">
+          <div class="proj-num">03</div>
+          <div class="proj-date">Feb 2025 – Apr 2025</div>
+        </div>
+        <div class="proj-title">YouTube Virality Prediction 🎬</div>
+        <div class="proj-buls">
+          <div class="pb">10,000+ videos across 5 countries via YouTube API — feature engineering on temporal patterns, engagement ratios, and metadata.</div>
+          <div class="pb">Logistic regression classifier — 70% accuracy, validated with train-test split and cross-validation. No overfitting shortcuts.</div>
+          <div class="pb">Findings via interactive Tableau dashboard. Virality is less random than it looks.</div>
+        </div>
+        <div class="proj-stack">
+          <span class="st s3">Python</span><span class="st s3">Pandas</span><span class="st s3">NumPy</span>
+          <span class="st s3">Scikit-learn</span><span class="st s3">YouTube API</span><span class="st s3">Tableau</span>
+        </div>
+        <div class="proj-foot">
+          <div class="proj-links">
+            <a href="#" class="plink">GitHub</a>
+            <a href="#" class="plink">Dashboard</a>
+          </div>
+          <button class="expand-btn" onclick="toggleDetail(this)">thought process <span class="arr">↓</span></button>
+        </div>
+      </div>
+      <div class="proj-detail p3">
+        <div class="pd-h">// how I approached this</div>
+        <div class="pd-sec">
+          <div class="pd-lbl">the problem</div>
+          <p class="pd-p">Most answers to "what makes a video go viral?" are vague. I wanted an <strong>empirical approach</strong> — collect enough data to test actual hypotheses. The multi-country scope was intentional: I wanted to see whether virality signals were <strong>platform-universal or culturally specific</strong>.</p>
+        </div>
+        <div class="pd-sec">
+          <div class="pd-lbl">key decisions</div>
+          <div class="pd-ul">
+            <div class="pd-li"><strong>Why logistic regression over a complex model?</strong> Interpretability. A random forest might have hit 73% instead of 70%, but I couldn't tell you which features drove virality. With logistic regression, the coefficients are the answer — and that's what's actually interesting.</div>
+            <div class="pd-li"><strong>Feature engineering was the real work</strong> — raw counts (views, likes) are too correlated with video age to be useful. I engineered ratios, temporal features (time-to-trending), and metadata signals to get at the actual predictive signal.</div>
+            <div class="pd-li"><strong>Some features were universal, others weren't</strong> — engagement ratios predicted virality across all 5 countries; optimal upload timing varied significantly. That nuance disappears if you only look at one market.</div>
+          </div>
+        </div>
+        <div class="pd-sec">
+          <div class="pd-lbl">what I'd do differently</div>
+          <p class="pd-p">Add a time-series component tracking a video's trajectory in the first 6 hours. The current model treats each video as a static snapshot. <em>Early dynamics are probably more predictive than the final state.</em></p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CERTIFICATIONS + ACHIEVEMENTS -->
+<section id="certifications">
+  <div class="wrap">
+    <div class="eyebrow">Certifications, Courses &amp; Achievements</div>
+    <h2 class="sec-title" style="color:var(--sky)">the receipts</h2>
+    <div class="ca-grid">
+      <div>
+        <div class="sub-h" style="color:var(--sky)">// certifications &amp; courses</div>
+        <div class="cert-list">
+          <div class="cert-c fade">
+            <div class="cert-prov">NPTEL</div>
+            <div class="cert-nm">Python for Data Science</div>
+            <div class="cert-badge">Silver + Elite</div>
+            <div class="cert-yr">August 2025</div>
+          </div>
+          <div class="cert-c fade">
+            <div class="cert-prov">Lovely Professional University</div>
+            <div class="cert-nm">Mastering Data Structures &amp; Algorithms</div>
+            <div class="cert-yr">August 2025</div>
+          </div>
+          <div class="cert-c fade">
+            <div class="cert-prov">iHub DivyaSampark — IIT Roorkee</div>
+            <div class="cert-nm">Python Programming Course</div>
+            <div class="cert-yr">September 2024</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="sub-h" style="color:var(--rose)">// achievements</div>
+        <div class="ach-list">
+          <div class="ach-c fade">
+            <div class="ach-tag">Smart India Hackathon</div>
+            <div class="ach-t">Top 15 — Gear Up Season 4</div>
+            <div class="ach-d">36-hour internal hackathon. 450+ teams. Top 15. The kind of event where you learn more in one night than in a semester.</div>
+            <span class="ach-badge">Top 15 / 450+ Teams</span>
+          </div>
+          <div class="ach-c fade">
+            <div class="ach-tag">Academic Excellence</div>
+            <div class="ach-t">Dean's Top 10%</div>
+            <div class="ach-d">Recognised for academic performance and extracurricular activities across semesters.</div>
+            <span class="ach-badge">Dean's List</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="wrap">
+    <div class="eyebrow">Experience (Internships &amp; Work)</div>
+    <h2 class="sec-title" style="color:var(--amber)">honestly?</h2>
+    <div class="exp-box fade">
+      <div class="exp-h">No internships yet — and I'm okay saying that.</div>
+      <div class="exp-b">
+        I'm a third-year student who spent the last year building <strong>real, end-to-end projects</strong> rather than padding a resume. The space weather pipeline, the stock engine, the virality predictor — those aren't coursework. I built them because I wanted to know if I could.
+        <br><br>
+        I'm actively looking for my first role in <strong>data science or data engineering</strong>. If you've read this far and think there might be a fit, I'd genuinely love to talk.
+      </div>
+      <div class="exp-note">// the projects section is basically my experience section, just more honest.</div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPETITIVE PROGRAMMING & HACKATHONS -->
+<section id="competitive">
+  <div class="wrap">
+    <div class="eyebrow">Competitive Programming &amp; Hackathons</div>
+    <h2 class="sec-title" style="color:var(--lavender)">competing &amp; problem-solving</h2>
+    <div class="cp-grid">
+      <div class="cp-c cc1 fade">
+        <div class="cp-plat" style="color:var(--coral)">Smart India Hackathon</div>
+        <div class="cp-t">Gear Up Season 4 — Top 15</div>
+        <div class="cp-d">36 hours. 450+ teams. Top 15. The kind of event where constraints become a creative advantage.</div>
+        <span class="cp-badge" style="color:var(--coral);border-color:rgba(255,107,107,.22)">Top 15 / 450+ Teams</span>
+      </div>
+      <div class="cp-c cc2 fade">
+        <div class="cp-plat" style="color:var(--mint)">Kaggle</div>
+        <div class="cp-t">Data Science Competitions</div>
+        <div class="cp-d">Active on Kaggle — applying ML and feature engineering to real competition datasets. The leaderboard is humbling and educational in equal measure.</div>
+        <span class="cp-badge" style="color:var(--mint);border-color:rgba(94,231,176,.22)">Competitor</span>
+      </div>
+      <div class="cp-c cc3 fade">
+        <div class="cp-plat" style="color:var(--lavender)">DSA &amp; Problem Solving</div>
+        <div class="cp-t">Algorithms &amp; Data Structures</div>
+        <div class="cp-d">Certified at LPU. Strong foundations in arrays, trees, graphs, and dynamic programming — applied directly in project design decisions.</div>
+        <span class="cp-badge" style="color:var(--lavender);border-color:rgba(184,169,245,.22)">Certified — LPU</span>
+      </div>
+      <div class="cp-c cc4 fade">
+        <div class="cp-plat" style="color:var(--amber)">Academic</div>
+        <div class="cp-t">Dean's Top 10%</div>
+        <div class="cp-d">Consistent academic performance across semesters alongside building projects and pursuing certifications.</div>
+        <span class="cp-badge" style="color:var(--amber);border-color:rgba(245,166,35,.22)">Dean's List</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OPEN SOURCE -->
+<section id="opensource" style="padding-top:0">
+  <div class="wrap">
+    <div class="eyebrow">Open Source Contributions</div>
+    <h2 class="sec-title" style="color:var(--muted)">open source</h2>
+    <div class="ph fade">
+      <div class="ph-t" style="color:var(--sky)">Participated actively in HacktoberFest 2023 and 2024</div>
+      <p>All project repositories are on GitHub with full documentation, notebooks, and pipeline code.<br><br>
+      <a href="https://github.com/AERI078" target="_blank">→ github.com/AERI078</a></p>
+    </div>
+  </div>
+</section>
+
+<!-- BLOG & RESEARCH -->
+<section id="blog" style="padding-top:0">
+  <div class="wrap">
+    <div class="eyebrow">Blog &amp; Technical Writing / Research Publications</div>
+    <h2 class="sec-title" style="color:var(--muted)">writing &amp; research</h2>
+    <div class="ph fade">
+      <div class="ph-t" style="color:var(--sky)">// blog &amp; technical writing</div>
+      <p><strong>Check out my LinkedIn profile for blogs and tech stories that excite me!.</strong> </p>
+      <p>I have drafts and opinions about ETL design, dashboard anti-patterns, and what makes a data pipeline actually maintainable.</p>
+    </div>
+    <div class="ph fade">
+      <div class="ph-t" style="color:var(--lavender)">// research publications / patents</div>
+      <p><strong>Working on a research paper titled: Comparative Analysis of Modern File Systems: Performance Evaluation Under Various  I/O Workloads.</strong></p>
+      <p>Authors : Maddela Nissi Grace, Shubhranjali and Arushi</p>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="wrap">
+    <div class="eyebrow">Contact Section</div>
+    <h2 class="sec-title" style="color:var(--rose)">let's talk</h2>
+    <div class="ct-grid">
+      <div>
+        <p class="ct-intro fade">I'm looking for <strong>internships and full-time roles</strong> in data science and data engineering. Also happy to talk about interesting problems, weird datasets, or anything where the answer genuinely surprised you.</p>
+        <div class="ct-links">
+          <a href="mailto:arushi.shi048@gmail.com" class="clink fade">
+            <span class="cicon">✉</span>
+            <div><div>arushi.shi048@gmail.com</div><div class="cmeta">email</div></div>
+          </a>
+          <a href="https://linkedin.com/in/arushi078" target="_blank" class="clink fade">
+            <span class="cicon" style="font-family:'JetBrains Mono',monospace;font-size:.68rem;font-weight:700">in</span>
+            <div><div>linkedin.com/in/arushi078</div><div class="cmeta">linkedin</div></div>
+          </a>
+          <a href="https://github.com/AERI078" target="_blank" class="clink fade">
+            <span class="cicon">⌥</span>
+            <div><div>github.com/AERI078</div><div class="cmeta">github</div></div>
+          </a>
+          <a href="resume.pdf" download class="clink fade" style="border-color:rgba(245,166,35,.22)">
+            <span class="cicon">↓</span>
+            <div><div>Download Resume (PDF)</div><div class="cmeta">cv · pdf</div></div>
+          </a>
+        </div>
+      </div>
+      <div class="ct-form fade">
+        <div class="fr"><label>name</label><input type="text" placeholder="Your name"></div>
+        <div class="fr"><label>email</label><input type="email" placeholder="your@email.com"></div>
+        <div class="fr"><label>message</label><textarea placeholder="What's on your mind?"></textarea></div>
+        <button class="fbtn" onclick="alert('Connect to Formspree.io or a backend to enable sending.')">send it →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft">© 2025 <span>Arushi</span> — made with curiosity &amp; too many browser tabs open</div>
+  <div style="display:flex;align-items:center;gap:18px">
+    <div class="ft" id="clock"></div>
+    <span class="ft-egg" title="..." onclick="document.getElementById('egg').classList.add('show')" style="user-select:none">✦</span>
+  </div>
+</footer>
+
+<script>
+// Cursor
+var cur = document.getElementById('cur');
+var ring = document.getElementById('cur-ring');
+var mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', function(e) {
+  mx = e.clientX; my = e.clientY;
+  cur.style.left = mx + 'px'; cur.style.top = my + 'px';
+});
+(function loop() {
+  rx += (mx - rx) * 0.13; ry += (my - ry) * 0.13;
+  ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+  requestAnimationFrame(loop);
+})();
+document.querySelectorAll('a, button').forEach(function(el) {
+  el.addEventListener('mouseenter', function() { cur.style.width = '15px'; cur.style.height = '15px'; });
+  el.addEventListener('mouseleave', function() { cur.style.width = '8px'; cur.style.height = '8px'; });
+});
+
+// Scroll reveal
+var io = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) {
+    if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+  });
+}, { threshold: 0, rootMargin: '0px 0px -30px 0px' });
+document.querySelectorAll('.fade').forEach(function(el) { io.observe(el); });
+setTimeout(function() {
+  document.querySelectorAll('.fade:not(.in)').forEach(function(el) { el.classList.add('in'); });
+}, 1200);
+
+// Nav active
+var navAs = document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll', function() {
+  var best = '';
+  document.querySelectorAll('section[id], div[id="hero"]').forEach(function(s) {
+    if (window.scrollY >= s.offsetTop - 180) best = s.id;
+  });
+  navAs.forEach(function(a) {
+    a.classList.toggle('active', a.getAttribute('href') === '#' + best);
+  });
+}, { passive: true });
+
+// Project expand/collapse
+function toggleDetail(btn) {
+  var card = btn.closest('.proj-card');
+  var detail = card.nextElementSibling;
+  var opening = !detail.classList.contains('open');
+  detail.classList.toggle('open', opening);
+  btn.classList.toggle('open', opening);
+  if (opening) setTimeout(function() { detail.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, 60);
+}
+
+// Clock
+function tick() {
+  document.getElementById('clock').textContent =
+    new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+}
+setInterval(tick, 1000); tick();
+
+// Konami code
+var k = [38,38,40,40,37,39,37,39,66,65], ki = 0;
+document.addEventListener('keydown', function(e) {
+  ki = (e.keyCode === k[ki]) ? ki + 1 : 0;
+  if (ki === k.length) { document.getElementById('egg').classList.add('show'); ki = 0; }
+});
+</script>
+</body>
+</html>
