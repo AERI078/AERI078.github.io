@@ -669,7 +669,7 @@ footer em{color:var(--accent2);font-style:normal;}
 <section id="current">
   <div class="container">
     <div class="sec-hd reveal"><span class="sec-tag">// 04</span><h2 class="sec-title">CURRENTLY_BUILDING</h2><div class="sec-line"></div></div>
-    <p class="reveal" style="font-size:.85rem;color:var(--text-dim);font-family:'Share Tech Mono',monospace;margin-bottom:2rem;max-width:680px;">These are live projects — incomplete, actively evolving, and exactly where I spend my thinking time right now. Click to see the full problem statement and my current approach.</p>
+    <p class="reveal" style="font-size:.85rem;color:var(--text-dim);font-family:'Share Tech Mono',monospace;margin-bottom:2rem;max-width:680px;">These are live projects — incomplete, actively evolving, and exactly where I spend my thinking time right now. Click to see my current approach.</p>
     <div class="wip-grid">
 
       <div class="wip-card reveal">
@@ -680,7 +680,7 @@ footer em{color:var(--accent2);font-style:normal;}
           query oceanographic data from ARGO floats in plain English. Instead of downloading NetCDF files 
           and writing code, you just ask: <em>"Show me salinity profiles near the equator in March 2023."</em>
         </div>
-        <button class="wip-expand-btn" onclick="toggleWip('wip1')">▸ FULL PROBLEM STATEMENT + APPROACH</button>
+        <button class="wip-expand-btn" onclick="toggleWip('wip1')">▸ CURRENT APPROACH</button>
         <div class="wip-detail" id="wip1">
           <div class="wip-ps">
             <strong>Problem:</strong> ARGO floats collect critical oceanographic data — temperature, salinity, BGC parameters — 
@@ -718,7 +718,7 @@ footer em{color:var(--accent2);font-style:normal;}
           This platform fuses multispectral/hyperspectral imaging with IoT environmental sensor data 
           to shift farmers from <em>reactive</em> to <em>proactive</em> crop management.
         </div>
-        <button class="wip-expand-btn" onclick="toggleWip('wip2')">▸ FULL PROBLEM STATEMENT + APPROACH</button>
+        <button class="wip-expand-btn" onclick="toggleWip('wip2')">▸ CURRENT APPROACH</button>
         <div class="wip-detail" id="wip2">
           <div class="wip-ps">
             <strong>Problem:</strong> Traditional crop monitoring is delayed and labor-intensive. 
@@ -913,7 +913,7 @@ footer em{color:var(--accent2);font-style:normal;}
   </div>
 </section>
 
-<footer>BUILT BY <em>ARUSHI</em> · DATA SCIENTIST &amp; ENGINEER · <em>2026</em> · Phagwara, India</footer>
+<footer>BUILT BY <em>ARUSHI</em> · DATA SCIENTIST &amp; ENGINEER · <em>2026</em></footer>
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 'use strict';
@@ -1233,7 +1233,7 @@ function toggleWip(id){
   const el=document.getElementById(id);
   const btn=el.previousElementSibling;
   if(el.classList.contains('open')){
-    el.classList.remove('open');btn.textContent='▸ FULL PROBLEM STATEMENT + APPROACH';
+    el.classList.remove('open');btn.textContent='▸ CURRENT APPROACH';
   }else{
     el.classList.add('open');btn.textContent='▾ COLLAPSE';
   }
